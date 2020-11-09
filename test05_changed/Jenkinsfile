@@ -1,0 +1,39 @@
+pipeline {
+    agent { label 'slave' }
+    stages {
+        stage('build') {
+            steps {
+				sh 'echo $GIT_COMMIT'
+				sh 'echo $GIT_PREVIOUS_COMMIT'
+                //sh 'echo build succ'
+				//sh 'whoami'
+				//sh 'hostname'
+				//sh 'gcc --version'
+				//sh 'distcc --version'
+				sh '''
+				echo line1
+				echo line2
+				CHANGED=`git diff --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT dir1`
+
+				if [ -z "$CHANGED" ]; then
+					echo "No changes dettected..."
+				else
+					echo "Directory changed"
+					cat dir1/file1.txt
+				fi
+				
+				CHANGED=`git diff --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT dir2`
+
+				if [ -z "$CHANGED" ]; then
+					echo "No changes dettected..."
+				else
+					echo "Directory changed"
+					cat dir2/file2.txt
+				fi
+				
+				
+				'''
+            }
+        }
+    }
+}
